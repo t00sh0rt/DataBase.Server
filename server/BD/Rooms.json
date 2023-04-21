@@ -7,8 +7,8 @@
       "villagerId": 1,
       "status": 1,
       "seats": 10,
-      "roomPrice": 20000,
-      "room_id": 1
+      "price": 20000,
+      "id": 1
     },
     {
       "name": "Люкс эконом бизнес",
@@ -17,8 +17,8 @@
       "villagerId": 2,
       "status": 2,
       "seats": 4,
-      "roomPrice": 10000,
-      "room_id": 2
+      "price": 10000,
+      "id": 2
     },
     {
       "name": "Комната для студентов",
@@ -27,8 +27,8 @@
       "villagerId": 0,
       "status": 0,
       "seats": 2,
-      "roomPrice": 4000,
-      "room_id": 3
+      "price": 4000,
+      "id": 3
     }
   ]
 }
