@@ -1,0 +1,34 @@
+{
+  "rooms": [
+    {
+      "name": "Люкс треп хата высшего класса",
+      "quality": "Президентский люкс",
+      "description": "Норм пойдёт",
+      "villagerId": 1,
+      "status": 1,
+      "seats": 10,
+      "roomPrice": 20000,
+      "room_id": 1
+    },
+    {
+      "name": "Люкс эконом бизнес",
+      "quality": "Депутатский люкс",
+      "description": "Лучший на свете, лучший на темноте",
+      "villagerId": 2,
+      "status": 2,
+      "seats": 4,
+      "roomPrice": 10000,
+      "room_id": 2
+    },
+    {
+      "name": "Комната для студентов",
+      "quality": "Стандарт",
+      "description": "Сборник тараканов",
+      "villagerId": 0,
+      "status": 0,
+      "seats": 2,
+      "roomPrice": 4000,
+      "room_id": 3
+    }
+  ]
+}

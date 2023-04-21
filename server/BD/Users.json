@@ -1,0 +1,22 @@
+﻿{
+  "users": [
+    {
+      "name": "Vasya Pupkin",
+      "email": "vasy@mail.ru",
+      "login": "vasy1234",
+      "password": "vasy1234",
+      "admin": 0,
+      "comeDate": "20/10/2024",
+      "outDate": "27/10/2024"
+    },
+    {
+      "name": "Petya Pupkin",
+      "email": "petya@mail.ru",
+      "login": "petya1234",
+      "password": "petya1234",
+      "admin": 0,
+      "comeDate": "18/10/2024",
+      "outDate": "19/10/2024"
+    }
+  ]
+}
