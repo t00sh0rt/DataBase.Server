@@ -70,7 +70,13 @@ namespace DataBase.BD
             }
             return null;
         }
-
+        public static DataBase InitBDClient(string roomobject, string userobject)//принимает аргументы данных о комнатах и пользователях в формате json
+        {
+            DataBase dataBase = new DataBase();//создаём класс для бдшки
+            dataBase.roomobject = JsonSerializer.Deserialize<Roomobject>(roomobject);//десериализуем
+            dataBase.userobject = JsonSerializer.Deserialize<Userobject>(userobject);
+            return dataBase;//возвращаем
+        }
         public static void AddUser(DataBase dataBase, User user)
         {
             List<User> users = dataBase.userobject.users.ToList();//делаем из массива список
