@@ -56,7 +56,7 @@ namespace DataBase.BD
         public Userobject userobject;
         public Roomobject roomobject;
 
-        public static DataBase InitBD(string path)//указываем путь к папке
+        public static DataBase InitBD(string path)//указываем путь к папке   
         {
             DataBase dataBase = new DataBase();//создаём класс для бдшки
             //далее десериализуем комнаты и пользователей и присваиваем данные к существующим в классе
