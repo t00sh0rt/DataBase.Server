@@ -55,10 +55,12 @@ namespace DataBase.BD
     {
         public Userobject userobject;
         public Roomobject roomobject;
+        public string path;
 
         public static DataBase InitBD(string path)//указываем путь к папке   
         {
             DataBase dataBase = new DataBase();//создаём класс для бдшки
+            dataBase.path = path;//сохраняем путь к папке
             //далее десериализуем комнаты и пользователей и присваиваем данные к существующим в классе
             if (File.Exists(path + "Rooms.json") && File.Exists(path + "Users.json"))
             {
@@ -83,7 +85,6 @@ namespace DataBase.BD
             users.Add(user);// добавляем в список пользователя
             dataBase.userobject.users = users.ToArray();//делаем из списка новый массив и присваиваем его к массиву который в классе бд
         }
-
         public static void RemoveUser(DataBase dataBase, int id)// функция обратная добавлению, удаляет конкретного пользователя по айди (реализация похожая на добавление)
         {
             for (int i = 0; i < dataBase.userobject.users.Length; i++)
@@ -102,7 +103,6 @@ namespace DataBase.BD
             rooms.Add(room);
             dataBase.roomobject.rooms = rooms.ToArray();
         }
-
         public static void RemoveRoomObject(DataBase dataBase, int id)//принцип такой же как удаление пользователя по айди
         {
             for (int i = 0; i < dataBase.roomobject.rooms.Length; i++)
@@ -115,7 +115,6 @@ namespace DataBase.BD
                 }
             }
         }
-
         public static string GetUserObjectString(Userobject _userobject)
         {
             if (_userobject == null)
@@ -173,6 +172,12 @@ namespace DataBase.BD
             return roomData;
         }
 
-
+        public static void SaveBD(DataBase dataBase)
+        {
+            var roomsPath = dataBase.path + "Rooms.json";
+            var usersPath = dataBase.path + "Users.json";
+            StreamWriter streamWriter= new StreamWriter(roomsPath);
+            streamWriter.Write(GetRoomObjectString(dataBase.roomobject));
+        }
     }
 }
