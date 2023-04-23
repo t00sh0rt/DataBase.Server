@@ -144,5 +144,35 @@ namespace DataBase.BD
             string roomData = JsonSerializer.Serialize<Roomobject>(_roomobject, options);
             return roomData;
         }
+        public static string GetCurrentUserString(User _user)
+        {
+            if (_user == null)
+            {
+
+            }
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            string userData = JsonSerializer.Serialize<User>(_user, options);
+            return userData;
+        }
+        public static string GetCurrentRoomString(Room _room)
+        {
+            if (_room == null)
+            {
+
+            }
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            string roomData = JsonSerializer.Serialize<Room>(_room, options);
+            return roomData;
+        }
+
+
     }
 }
