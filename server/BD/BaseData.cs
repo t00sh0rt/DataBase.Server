@@ -57,6 +57,65 @@ namespace DataBase.BD
         public Roomobject roomobject;
         public string path;
 
+
+        public static void SortById(DataBase dataBase)//сортировка id(номер комнаты) по возрастанию
+        {
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            var sortedlist = from p in roomlist
+                             orderby p.id
+                             select p;
+            dataBase.roomobject.rooms = sortedlist.ToArray();  
+        }
+
+        public static void SortByIdDescending(DataBase dataBase)//сортировка id(номер комнаты) по убыванию ;)
+        {
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            var sortedlist = from p in roomlist
+                             orderby p.id descending
+                             select p;
+            dataBase.roomobject.rooms = sortedlist.ToArray();
+        }
+
+        public static void SortBysSeats(DataBase dataBase)//сортировка мест в комнате по возрастанию
+        {
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            var sortedlist = from p in roomlist
+                             orderby p.seats
+                             select p;
+            dataBase.roomobject.rooms = sortedlist.ToArray();
+        }
+        
+        public static void SortBysSeatsDescending(DataBase dataBase)//сортировка мест в комнате по убыванию
+        {
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            var sortedlist = from p in roomlist
+                             orderby p.seats descending
+                             select p;
+            dataBase.roomobject.rooms = sortedlist.ToArray();
+        }
+
+        public static void SortByPrice(DataBase dataBase)//сортировка цены в комнате по возрастанию
+        {
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            var sortedlist = from p in roomlist
+                             orderby p.price
+                             select p;
+            dataBase.roomobject.rooms = sortedlist.ToArray();
+        }
+         public static void SortByPriceDescending(DataBase dataBase)//сортировка цены в комнате по убыванию
+        {
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            var sortedlist = from p in roomlist
+                             orderby p.price descending
+                             select p;
+            dataBase.roomobject.rooms = sortedlist.ToArray();
+        }
+
+
+
+
+
+
         public static DataBase InitBD(string path)//указываем путь к папке   
         {
             DataBase dataBase = new DataBase();//создаём класс для бдшки
