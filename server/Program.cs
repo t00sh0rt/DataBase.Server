@@ -13,6 +13,7 @@ namespace server
            // BD init
                 string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetFullPath("Rooms1.json"))))) + "\\BD\\";
             DataBase.BD.DataBase dataBase = DataBase.BD.DataBase.InitBD(path);
+            
             const string ip = "127.0.0.1"; //Ip локальный  
             const int port = 8080; //Port любой
 
