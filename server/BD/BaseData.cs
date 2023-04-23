@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -131,6 +131,7 @@ namespace DataBase.BD
             }
             return null;
         }
+
         public static DataBase InitBDClient(string roomobject, string userobject)//(не определились в использовании)    принимает аргументы данных о комнатах и пользователях в формате json
         {
             DataBase dataBase = new DataBase();//создаём класс для бдшки
@@ -138,6 +139,7 @@ namespace DataBase.BD
             dataBase.userobject = JsonSerializer.Deserialize<Userobject>(userobject);
             return dataBase;//возвращаем
         }
+
         public static void AddUser(DataBase dataBase, User user)//функция добавления пользователя в базу данных. принимает на вход бд и пользователя
         {
             List<User> users = dataBase.userobject.users.ToList();//делаем из массива список
