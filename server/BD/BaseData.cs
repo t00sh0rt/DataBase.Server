@@ -96,7 +96,7 @@ namespace DataBase.BD
                 }
             }
         }
-        public static void AddRoomobject(DataBase dataBase, Room room)//принцип такой же как у добавления пользователя
+        public static void AddRoomobject(DataBase dataBase, Room room)//принцип такой же как у добавления пользователя 
         {
             List<Room> rooms = dataBase.roomobject.rooms.ToList();
             rooms.Add(room);
