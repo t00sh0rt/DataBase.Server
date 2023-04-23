@@ -143,7 +143,7 @@ namespace DataBase.BD
             string roomData = JsonSerializer.Serialize<Roomobject>(_roomobject, options);
             return roomData;
         }
-        public static string GetCurrentUserString(User _user)//функция сериализует конкретного пользователя, десериализовав которого, можно создать класс User в клиенте
+        public static string GetCurrentUserString(User _user)//функция сериализует конкретного пользователя, десериализовав которого, можно создать класс User в клиенте или сервере
         {
             if (_user == null)
             {
@@ -157,7 +157,7 @@ namespace DataBase.BD
             string userData = JsonSerializer.Serialize<User>(_user, options);
             return userData;
         }
-        public static string GetCurrentRoomString(Room _room)//функция сериализует конкретного комнату, десериализовав которую, можно создать класс Room в клиенте
+        public static string GetCurrentRoomString(Room _room)//функция сериализует конкретного комнату, десериализовав которую, можно создать класс Room в клиенте или сервере
         {
             if (_room == null)
             {
@@ -177,6 +177,14 @@ namespace DataBase.BD
             var usersPath = dataBase.path + "Users.json";
             File.WriteAllText(roomsPath,GetRoomObjectString(dataBase.roomobject));//записывает в файл результат функции (смотри комментарий функции)
             File.WriteAllText(usersPath, GetUserObjectString(dataBase.userobject));
+        }
+        public static User InitUser(string userData)//функция возвращает класс пользователя. на вход принимает результат функции GetCurrentUserString
+        {
+            return JsonSerializer.Deserialize<User>(userData);
+        }
+        public static Room InitRoom(string roomData)//функция возвращает класс комнаты. на вход принимает результат функции GetCurrentRoomString
+        {
+            return JsonSerializer.Deserialize<Room>(roomData);
         }
     }
 }
