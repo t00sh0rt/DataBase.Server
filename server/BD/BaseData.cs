@@ -56,14 +56,14 @@ namespace DataBase.BD
         public Userobject userobject;
         public Roomobject roomobject;
 
-
-        public static void SortById(DataBase dataBase)//сортировка id(номер комнаты) по возрастанию
+        //функция сортировки
+        public static void SortById(DataBase dataBase)
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
-            var sortedlist = from p in roomlist
-                             orderby p.id
+            List<Room> roomlist = dataBase.roomobject.rooms.ToList();//делаем из массива список и сортируем id комнаты по возрастания
+            var sortedlist = from p in roomlist                                     // var локальная переменная
+                             orderby p.id  
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();  
+            dataBase.roomobject.rooms = sortedlist.ToArray();//делаем из списка новый массив   
         }
 
         public static void SortByIdDescending(DataBase dataBase)//сортировка id(номер комнаты) по убыванию ;)
@@ -93,7 +93,7 @@ namespace DataBase.BD
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
 
-        public static void SortByPrice(DataBase dataBase)//сортировка цены в комнате по возрастанию
+        public static void SortByPrice(DataBase dataBase)//сортировка цены комнаты по возрастанию
         {
             List<Room> roomlist = dataBase.roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
@@ -101,7 +101,7 @@ namespace DataBase.BD
                              select p;
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
-         public static void SortByPriceDescending(DataBase dataBase)//сортировка цены в комнате по убыванию
+         public static void SortByPriceDescending(DataBase dataBase)//сортировка цены комнаты по убыванию
         {
             List<Room> roomlist = dataBase.roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
@@ -110,6 +110,22 @@ namespace DataBase.BD
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
 
+        public static void SortByUsersId(DataBase dataBase)//сортировка id(юзера) по возрастанию
+        {
+            List<User> userslist = dataBase.userobject.users.ToList();
+            var sortedlist = from p in userslist
+                             orderby p.id
+                             select p;
+            dataBase.userobject.users = userslist.ToArray();
+        }
+        public static void SortByUsersIdDescending(DataBase dataBase)//сортировка id(юзера) по убыванию
+        {
+            List<User> userslist = dataBase.userobject.users.ToList();
+            var sortedlist = from p in userslist
+                             orderby p.id descending
+                             select p;
+            dataBase.userobject.users = sortedlist.ToArray();
+        }
 
 
 
