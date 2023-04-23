@@ -1,4 +1,4 @@
-﻿{
+{
   "users": [
     {
       "id": 1,
@@ -11,7 +11,7 @@
       "outDate": "27/10/2024"
     },
     {
-      "id": 2,  
+      "id": 2,
       "name": "Petya Pupkin",
       "email": "petya@mail.ru",
       "login": "petya1234",

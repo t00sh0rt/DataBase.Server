@@ -72,14 +72,14 @@ namespace DataBase.BD
             }
             return null;
         }
-        public static DataBase InitBDClient(string roomobject, string userobject)//принимает аргументы данных о комнатах и пользователях в формате json
+        public static DataBase InitBDClient(string roomobject, string userobject)//(не определились в использовании)    принимает аргументы данных о комнатах и пользователях в формате json
         {
             DataBase dataBase = new DataBase();//создаём класс для бдшки
             dataBase.roomobject = JsonSerializer.Deserialize<Roomobject>(roomobject);//десериализуем
             dataBase.userobject = JsonSerializer.Deserialize<Userobject>(userobject);
             return dataBase;//возвращаем
         }
-        public static void AddUser(DataBase dataBase, User user)
+        public static void AddUser(DataBase dataBase, User user)//функция добавления пользователя в базу данных. принимает на вход бд и пользователя
         {
             List<User> users = dataBase.userobject.users.ToList();//делаем из массива список
             users.Add(user);// добавляем в список пользователя
@@ -115,7 +115,7 @@ namespace DataBase.BD
                 }
             }
         }
-        public static string GetUserObjectString(Userobject _userobject)
+        public static string GetUserObjectString(Userobject _userobject)//функция сериализует всех пользователей и по сути сам результат функции является тем же что хранится в файле Users.json
         {
             if (_userobject == null)
             {
@@ -129,7 +129,7 @@ namespace DataBase.BD
             string userData = JsonSerializer.Serialize<Userobject>(_userobject, options);
             return userData;
         }
-        public static string GetRoomObjectString(Roomobject _roomobject)
+        public static string GetRoomObjectString(Roomobject _roomobject)//функция сериализует все комнаты, результат функции является тем же что хранится в файле Rooms.json
         {
             if (_roomobject == null)
             {
@@ -143,13 +143,13 @@ namespace DataBase.BD
             string roomData = JsonSerializer.Serialize<Roomobject>(_roomobject, options);
             return roomData;
         }
-        public static string GetCurrentUserString(User _user)
+        public static string GetCurrentUserString(User _user)//функция сериализует конкретного пользователя, десериализовав которого, можно создать класс User в клиенте
         {
             if (_user == null)
             {
 
             }
-            JsonSerializerOptions options = new JsonSerializerOptions
+            JsonSerializerOptions options = new JsonSerializerOptions//настройки для того чтобы русский текст не превратился в юникод по типу /u4040/
             {
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
                 WriteIndented = true
@@ -157,13 +157,13 @@ namespace DataBase.BD
             string userData = JsonSerializer.Serialize<User>(_user, options);
             return userData;
         }
-        public static string GetCurrentRoomString(Room _room)
+        public static string GetCurrentRoomString(Room _room)//функция сериализует конкретного комнату, десериализовав которую, можно создать класс Room в клиенте
         {
             if (_room == null)
             {
 
             }
-            JsonSerializerOptions options = new JsonSerializerOptions
+            JsonSerializerOptions options = new JsonSerializerOptions//настройки для того чтобы русский текст не превратился в юникод по типу /u4040/
             {
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
                 WriteIndented = true
@@ -171,13 +171,12 @@ namespace DataBase.BD
             string roomData = JsonSerializer.Serialize<Room>(_room, options);
             return roomData;
         }
-
-        public static void SaveBD(DataBase dataBase)
+        public static void SaveBD(DataBase dataBase)//функция сохраняет базу данных - записывает в файл
         {
-            var roomsPath = dataBase.path + "Rooms.json";
+            var roomsPath = dataBase.path + "Rooms.json";//путь к файлу
             var usersPath = dataBase.path + "Users.json";
-            StreamWriter streamWriter= new StreamWriter(roomsPath);
-            streamWriter.Write(GetRoomObjectString(dataBase.roomobject));
+            File.WriteAllText(roomsPath,GetRoomObjectString(dataBase.roomobject));//записывает в файл результат функции (смотри комментарий функции)
+            File.WriteAllText(usersPath, GetUserObjectString(dataBase.userobject));
         }
     }
 }
