@@ -10,6 +10,7 @@ namespace server
     {
         static void Main(string[] args)
         {
+            string message;
            // BD init
                 string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetFullPath("Rooms1.json"))))) + "\\BD\\";
             DataBase.BD.DataBase dataBase = DataBase.BD.DataBase.InitBD(path);
@@ -38,11 +39,22 @@ namespace server
                 }
                 while (listener.Available > 0);
 
+                message = data.ToString();
                 Console.WriteLine(data.ToString());
-
                 string roomx = DataBase.BD.DataBase.GetRoomObjectString(dataBase.roomobject);
+                string client = DataBase.BD.DataBase.GetUserObjectString(dataBase.userobject);
+                if (message == "1")
+                {
+                    listener.Send(Encoding.UTF8.GetBytes(roomx)); //передаем какое-либо сообщение
+                }
+                if (message == "2")
+                {
+                    listener.Send(Encoding.UTF8.GetBytes(client));
+                }
+                
 
-                listener.Send(Encoding.UTF8.GetBytes(roomx)); //передаем какое-либо сообщение
+               
+                
                 listener.Shutdown(SocketShutdown.Both); // отключаем и у клиента, и у сервера
                 listener.Close(); // закрываем
 
