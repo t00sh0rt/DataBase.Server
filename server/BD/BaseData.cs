@@ -33,6 +33,7 @@ namespace DataBase.BD
 
 
 
+
     public class Userobject
     {
         public User[] users { get; set; }
@@ -43,12 +44,14 @@ namespace DataBase.BD
         public int id { get; set; }
         public string name { get; set; }
         public string email { get; set; }
+        public string number { get; set; }
         public string login { get; set; }
         public string password { get; set; }
         public int admin { get; set; }
         public string comeDate { get; set; }
         public string outDate { get; set; }
     }
+
 
 
     public class DataBase
@@ -64,7 +67,7 @@ namespace DataBase.BD
             var sortedlist = from p in roomlist
                              orderby p.id
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();  
+            dataBase.roomobject.rooms = sortedlist.ToArray();
         }
 
         public static void SortByIdDescending(DataBase dataBase)//сортировка id(номер комнаты) по убыванию ;)
@@ -84,7 +87,7 @@ namespace DataBase.BD
                              select p;
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
-        
+
         public static void SortBysSeatsDescending(DataBase dataBase)//сортировка мест в комнате по убыванию
         {
             List<Room> roomlist = dataBase.roomobject.rooms.ToList();
@@ -102,7 +105,7 @@ namespace DataBase.BD
                              select p;
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
-         public static void SortByPriceDescending(DataBase dataBase)//сортировка цены в комнате по убыванию
+        public static void SortByPriceDescending(DataBase dataBase)//сортировка цены в комнате по убыванию
         {
             List<Room> roomlist = dataBase.roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
@@ -236,7 +239,7 @@ namespace DataBase.BD
         {
             var roomsPath = dataBase.path + "Rooms.json";//путь к файлу
             var usersPath = dataBase.path + "Users.json";
-            File.WriteAllText(roomsPath,GetRoomObjectString(dataBase.roomobject));//записывает в файл результат функции (смотри комментарий функции)
+            File.WriteAllText(roomsPath, GetRoomObjectString(dataBase.roomobject));//записывает в файл результат функции (смотри комментарий функции)
             File.WriteAllText(usersPath, GetUserObjectString(dataBase.userobject));
         }
         public static User InitUser(string userData)//функция возвращает класс пользователя. на вход принимает результат функции GetCurrentUserString
