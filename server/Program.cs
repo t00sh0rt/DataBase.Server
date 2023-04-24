@@ -27,24 +27,24 @@ namespace server
             int choice;
             int BookingId = 2;
 
-            const string ip = "127.0.0.1"; //Ip Р»РѕРєР°Р»СЊРЅС‹Р№  
-            const int port = 8080; //Port Р»СЋР±РѕР№
+            const string ip = "127.0.0.1"; //Ip локальный  
+            const int port = 8080; //Port любой
 
-            var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port); // РєР»Р°СЃСЃ РєРѕРЅРµС‡РЅРѕР№ С‚РѕС‡РєРё (С‚РѕС‡РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ), РїСЂРёРЅРёРјР°РµС‚ Ip and Port
+            var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port); // класс конечной точки (точка подключения), принимает Ip and Port
 
-            var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // СЃРѕРєРµС‚ РѕР±СЉСЏРІР»СЏРµРј, С‡РµСЂРµР· РЅРµРіРѕ РІСЃРµ РїСЂРѕС…РѕРґРёС‚ + РїСЂРѕРїРёСЃС‹РІР°РµРј РґРµС„РѕР»С‚РЅС‹Рµ С…Р°СЂР°РєС‚РµСЂРёСЃС‚РёРєРё РґР»СЏ TCP
+            var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // сокет объявляем, через него все проходит + прописываем дефолтные характеристики для TCP
 
 
-            tcpSocket.Bind(tcpEndPoint); // РЎРІСЏР·С‹РІР°РµРј СЃРѕРєРµС‚ СЃ РєРѕРЅРµС‡РЅРѕР№ С‚РѕС‡РєРѕР№ (РєРѕРіРѕ РЅСѓР¶РЅРѕ СЃР»СѓС€Р°С‚СЊ)
-            tcpSocket.Listen(100); // РєРѕР»-РІРѕ С‡РµР»РѕРІ, РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ
+            tcpSocket.Bind(tcpEndPoint); // Связываем сокет с конечной точкой (кого нужно слушать)
+            tcpSocket.Listen(100); // кол-во челов, которые могут подключиться
             DataBase.BD.User user = new User();
 
             while (true)
             {
 
-                // РѕР±СЂР°Р±РѕС‚С‡РёРє РЅР° РїСЂРёРµРј СЃРѕРѕР±С‰РµРЅРёСЏ 
-                var listener = tcpSocket.Accept(); //РЅРѕРІС‹Р№ СЃРѕРєРµС‚, РєРѕС‚РѕСЂС‹Р№ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РєР»РёРµРЅС‚Р°
-                var buffer = new byte[256]; // РјР°СЃСЃРёРІ Р±Р°Р№С‚РѕРІ, РєСѓРґР° Р±СѓРґСѓС‚ РїСЂРёРЅРёРјР°С‚СЊСЃСЏ СЃРѕРѕР±С‰РµРЅРёСЏ
+                // обработчик на прием сообщения 
+                var listener = tcpSocket.Accept(); //новый сокет, который обрабатывает клиента
+                var buffer = new byte[256]; // массив байтов, куда будут приниматься сообщения
                 var size = 0;
                 var data = new StringBuilder();
 
@@ -57,8 +57,8 @@ namespace server
 
                 do
                 {
-                    size = listener.Receive(buffer); // РІ size Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ СЂРµР°Р»СЊРЅРѕ РїРѕР»СѓС‡РµРЅРЅС‹С… Р±Р°Р№С‚
-                    data.Append(Encoding.UTF8.GetString(buffer, 0, size)); // РїРµСЂРµРІРѕРґРёРј Рё Р·Р°РїРёСЃС‹РІР°РµРј С‚РµРєСЃС‚
+                    size = listener.Receive(buffer); // в size записывается размерность реально полученных байт
+                    data.Append(Encoding.UTF8.GetString(buffer, 0, size)); // переводим и записываем текст
                 }
                 while (listener.Available > 0);
 
@@ -71,7 +71,7 @@ namespace server
                 string client = DataBase.BD.DataBase.GetUserObjectString(dataBase.userobject);
                 if (choice == 1)
                 {
-                    listener.Send(Encoding.UTF8.GetBytes(roomx)); //РїРµСЂРµРґР°РµРј РєР°РєРѕРµ-Р»РёР±Рѕ СЃРѕРѕР±С‰РµРЅРёРµ
+                    listener.Send(Encoding.UTF8.GetBytes(roomx)); //передаем какое-либо сообщение
                 }
                 if (choice == 2)
                 {
@@ -95,8 +95,8 @@ namespace server
                     listener.Send(Encoding.UTF8.GetBytes(server.BL.BusinessLogik.FindUser(message, dataBase)));
                 }
 
-                listener.Shutdown(SocketShutdown.Both); // РѕС‚РєР»СЋС‡Р°РµРј Рё Сѓ РєР»РёРµРЅС‚Р°, Рё Сѓ СЃРµСЂРІРµСЂР°
-                listener.Close(); // Р·Р°РєСЂС‹РІР°РµРј
+                listener.Shutdown(SocketShutdown.Both); // отключаем и у клиента, и у сервера
+                listener.Close(); // закрываем
             }
         }
     }

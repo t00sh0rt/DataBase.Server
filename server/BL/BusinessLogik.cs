@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataBase.BD;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -35,7 +36,7 @@ namespace server.BL
             string roomx = "0";
 
             for (int i = 0; i < dataBase.roomobject.rooms.Length; i++)
-            {
+                {
                 if (dataBase.roomobject.rooms[i].id == Convert.ToInt64(roomId))
                 {
                     roomx = DataBase.BD.DataBase.GetCurrentUserString(dataBase.userobject.users[i]);
@@ -45,9 +46,12 @@ namespace server.BL
                 {
                     roomx = "ошибка";
                 }
+                if (message == "3")
+            {
+                
             }
             return (roomx);
-        
-        }
+            
+            }
     }
 }
