@@ -115,26 +115,6 @@ namespace DataBase.BD
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
 
-        public static void SortByUsersId(DataBase dataBase)//сортировка id(юзера) по возрастанию
-        {
-            List<User> userslist = dataBase.userobject.users.ToList();
-            var sortedlist = from p in userslist
-                             orderby p.id
-                             select p;
-            dataBase.userobject.users = userslist.ToArray();
-        }
-        public static void SortByUsersIdDescending(DataBase dataBase)//сортировка id(юзера) по убыванию
-        {
-            List<User> userslist = dataBase.userobject.users.ToList();
-            var sortedlist = from p in userslist
-                             orderby p.id descending
-                             select p;
-            dataBase.userobject.users = sortedlist.ToArray();
-        }
-
-
-
-
 
         public static DataBase InitBD(string path)//указываем путь к папке   
         {
