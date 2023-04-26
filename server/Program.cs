@@ -3,6 +3,7 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using DataBase.BD;
+using server.BL;
 
 namespace server
 {
@@ -12,18 +13,19 @@ namespace server
         {
 
             string gog;
-            
-            
+
+
 
             string message;
-           // BD init
-                string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetFullPath("Rooms1.json"))))) + "\\BD\\";
+            // BD init
+            string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetFullPath("Rooms1.json"))))) + "\\BD\\";
             DataBase.BD.DataBase dataBase = DataBase.BD.DataBase.InitBD(path);
 
             //gog = server.BL.BusinessLogik.FindUser("petya1234", "petya1234", dataBase);
 
             //Console.WriteLine(gog);
             int choice;
+            int BookingId = 2;
 
             const string ip = "127.0.0.1"; //Ip локальный  
             const int port = 8080; //Port любой
@@ -31,17 +33,15 @@ namespace server
             var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port); // класс конечной точки (точка подключения), принимает Ip and Port
 
             var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // сокет объявляем, через него все проходит + прописываем дефолтные характеристики для TCP
-            
-           
+
 
             tcpSocket.Bind(tcpEndPoint); // Связываем сокет с конечной точкой (кого нужно слушать)
             tcpSocket.Listen(100); // кол-во челов, которые могут подключиться
-
-           
+            DataBase.BD.User user = new User();
 
             while (true)
             {
-                
+
                 // обработчик на прием сообщения 
                 var listener = tcpSocket.Accept(); //новый сокет, который обрабатывает клиента
                 var buffer = new byte[256]; // массив байтов, куда будут приниматься сообщения
@@ -61,12 +61,12 @@ namespace server
                     data.Append(Encoding.UTF8.GetString(buffer, 0, size)); // переводим и записываем текст
                 }
                 while (listener.Available > 0);
-               
+
 
                 message = data.ToString();
                 Console.WriteLine(message);
 
-                
+
                 string roomx = DataBase.BD.DataBase.GetRoomObjectString(dataBase.roomobject);
                 string client = DataBase.BD.DataBase.GetUserObjectString(dataBase.userobject);
                 if (choice == 1)
@@ -77,14 +77,26 @@ namespace server
                 {
                     listener.Send(Encoding.UTF8.GetBytes(client));
                 }
-                
+                if (choice == 3)
+                {
+                    if (BookingId > 1000)
+                    {
+                        BookingId = 0;
+                    }
+                    BookingId++;
+                    user = DataBase.BD.DataBase.InitUser(message);
+                    user.id = BookingId;
+                    DataBase.BD.DataBase.AddUser(dataBase, user);
 
-               
-                
+                    listener.Send(Encoding.UTF8.GetBytes(BookingId.ToString()));
+                }
+                if (choice == 4)
+                {
+                    listener.Send(Encoding.UTF8.GetBytes(server.BL.BusinessLogik.FindUser(message, dataBase)));
+                }
+
                 listener.Shutdown(SocketShutdown.Both); // отключаем и у клиента, и у сервера
                 listener.Close(); // закрываем
-
-                
             }
         }
     }
