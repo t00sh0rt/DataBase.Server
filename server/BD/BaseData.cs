@@ -68,7 +68,6 @@ namespace DataBase.BD
             var sortedlist = from p in roomlist                                     // var локальная переменная
                              orderby p.id  
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();
             dataBase.roomobject.rooms = sortedlist.ToArray();//делаем из списка новый массив   
         }
 
@@ -107,7 +106,6 @@ namespace DataBase.BD
                              select p;
             dataBase.roomobject.rooms = sortedlist.ToArray();
         }
-        public static void SortByPriceDescending(DataBase dataBase)//сортировка цены в комнате по убыванию
          public static void SortByPriceDescending(DataBase dataBase)//сортировка цены комнаты по убыванию
         {
             List<Room> roomlist = dataBase.roomobject.rooms.ToList();
