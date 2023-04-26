@@ -62,58 +62,59 @@ namespace DataBase.BD
         public string path;
 
         //функция сортировки
-        public static void SortById(DataBase dataBase)
+        public static void SortById(Roomobject roomobject)
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();//делаем из массива список и сортируем id комнаты по возрастания
+            List<Room> roomlist = roomobject.rooms.ToList();//делаем из массива список и сортируем id комнаты по возрастания
             var sortedlist = from p in roomlist                                     // var локальная переменная
                              orderby p.id  
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();//делаем из списка новый массив   
+            roomobject.rooms = sortedlist.ToArray();//делаем из списка новый массив   
         }
 
-        public static void SortByIdDescending(DataBase dataBase)//сортировка id(номер комнаты) по убыванию ;)
+        public static void SortByIdDescending(Roomobject roomobject)//сортировка id(номер комнаты) по убыванию ;)
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            List<Room> roomlist = roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
                              orderby p.id descending
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();
+            roomobject.rooms = sortedlist.ToArray();
         }
 
-        public static void SortBysSeats(DataBase dataBase)//сортировка мест в комнате по возрастанию
+        public static void SortBysSeats(Roomobject roomobject)//сортировка мест в комнате по возрастанию
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            List<Room> roomlist = roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
                              orderby p.seats
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();
+            roomobject.rooms = sortedlist.ToArray();
         }
 
-        public static void SortBysSeatsDescending(DataBase dataBase)//сортировка мест в комнате по убыванию
+        public static void SortBysSeatsDescending(Roomobject roomobject)//сортировка мест в комнате по убыванию
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            List<Room> roomlist = roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
                              orderby p.seats descending
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();
+            roomobject.rooms = sortedlist.ToArray();
         }
 
-        public static void SortByPrice(DataBase dataBase)//сортировка цены комнаты по возрастанию
+        public static void SortByPrice(Roomobject roomobject)//сортировка цены комнаты по возрастанию
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            List<Room> roomlist = roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
                              orderby p.price
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();
+            roomobject.rooms = sortedlist.ToArray();
         }
-         public static void SortByPriceDescending(DataBase dataBase)//сортировка цены комнаты по убыванию
+         public static void SortByPriceDescending(Roomobject roomobject)//сортировка цены комнаты по убыванию
         {
-            List<Room> roomlist = dataBase.roomobject.rooms.ToList();
+            List<Room> roomlist = roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
                              orderby p.price descending
                              select p;
-            dataBase.roomobject.rooms = sortedlist.ToArray();
+            roomobject.rooms = sortedlist.ToArray();
         }
+
 
 
         public static DataBase InitBD(string path)//указываем путь к папке   
