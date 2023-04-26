@@ -117,8 +117,6 @@ namespace DataBase.BD
 
 
 
-
-
         public static DataBase InitBD(string path)//указываем путь к папке   
         {
             DataBase dataBase = new DataBase();//создаём класс для бдшки
