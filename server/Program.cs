@@ -12,17 +12,18 @@ namespace server
         {
 
             string gog;
-
-
+            
+            
 
             string message;
            // BD init
                 string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetFullPath("Rooms1.json"))))) + "\\BD\\";
             DataBase.BD.DataBase dataBase = DataBase.BD.DataBase.InitBD(path);
 
-            gog = server.BL.BusinessLogik.FindUser("petya1234", "petya1234", dataBase);
+            //gog = server.BL.BusinessLogik.FindUser("petya1234", "petya1234", dataBase);
 
-            Console.WriteLine(gog);
+            //Console.WriteLine(gog);
+            int choice;
 
             const string ip = "127.0.0.1"; //Ip локальный  
             const int port = 8080; //Port любой
@@ -30,16 +31,29 @@ namespace server
             var tcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), port); // класс конечной точки (точка подключения), принимает Ip and Port
 
             var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // сокет объявляем, через него все проходит + прописываем дефолтные характеристики для TCP
+            
+           
+
             tcpSocket.Bind(tcpEndPoint); // Связываем сокет с конечной точкой (кого нужно слушать)
             tcpSocket.Listen(100); // кол-во челов, которые могут подключиться
 
+           
+
             while (true)
             {
+                
                 // обработчик на прием сообщения 
                 var listener = tcpSocket.Accept(); //новый сокет, который обрабатывает клиента
                 var buffer = new byte[256]; // массив байтов, куда будут приниматься сообщения
                 var size = 0;
                 var data = new StringBuilder();
+
+                byte[] ChoiceByte = new byte[4];
+                listener.Receive(ChoiceByte);
+
+                choice = BitConverter.ToInt32(ChoiceByte, 0);
+
+                Console.WriteLine(choice);
 
                 do
                 {
@@ -47,16 +61,19 @@ namespace server
                     data.Append(Encoding.UTF8.GetString(buffer, 0, size)); // переводим и записываем текст
                 }
                 while (listener.Available > 0);
+               
 
                 message = data.ToString();
-                Console.WriteLine(data.ToString());
+                Console.WriteLine(message);
+
+                
                 string roomx = DataBase.BD.DataBase.GetRoomObjectString(dataBase.roomobject);
                 string client = DataBase.BD.DataBase.GetUserObjectString(dataBase.userobject);
-                if (message == "1")
+                if (choice == 1)
                 {
                     listener.Send(Encoding.UTF8.GetBytes(roomx)); //передаем какое-либо сообщение
                 }
-                if (message == "2")
+                if (choice == 2)
                 {
                     listener.Send(Encoding.UTF8.GetBytes(client));
                 }
