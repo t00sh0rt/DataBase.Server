@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "1",
-      "room_id": 1,
+      "room_id": "1",
       "name": "Vasya Pupkin",
       "email": "vasy@mail.ru",
       "number": "+78964780684",
@@ -11,7 +11,7 @@
     },
     {
       "id": "2",
-      "room_id": 2,
+      "room_id": "2",
       "name": "Petya Pupkin",
       "email": "petya@mail.ru",
       "number": "+78984780384",
