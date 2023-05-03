@@ -8,8 +8,9 @@ using System.Text.Json.Nodes;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
-namespace DataBase.BD
+namespace server
 {
+
 
 
 
@@ -24,11 +25,12 @@ namespace DataBase.BD
         public string name { get; set; }
         public string quality { get; set; }
         public string description { get; set; }
-        public int status { get; set; }
-        public int seats { get; set; }
-        public int price { get; set; }
-        public int id { get; set; }
+        public string seats { get; set; }
+        public string price { get; set; }
+        public string[] dates { get; set; }
+        public string id { get; set; }
     }
+
 
 
 
@@ -44,7 +46,7 @@ namespace DataBase.BD
     public class User
     {
         public string id { get; set; }//номер брони
-        public int room_id { get; set; }//номер комнаты
+        public string room_id { get; set; }//номер комнаты
         public string name { get; set; }
         public string email { get; set; }
         public string number { get; set; }
@@ -66,7 +68,7 @@ namespace DataBase.BD
         {
             List<Room> roomlist = roomobject.rooms.ToList();//делаем из массива список и сортируем id комнаты по возрастания
             var sortedlist = from p in roomlist                                     // var локальная переменная
-                             orderby p.id  
+                             orderby p.id
                              select p;
             roomobject.rooms = sortedlist.ToArray();//делаем из списка новый массив   
         }
@@ -106,7 +108,7 @@ namespace DataBase.BD
                              select p;
             roomobject.rooms = sortedlist.ToArray();
         }
-         public static void SortByPriceDescending(Roomobject roomobject)//сортировка цены комнаты по убыванию
+        public static void SortByPriceDescending(Roomobject roomobject)//сортировка цены комнаты по убыванию
         {
             List<Room> roomlist = roomobject.rooms.ToList();
             var sortedlist = from p in roomlist
@@ -165,7 +167,7 @@ namespace DataBase.BD
             rooms.Add(room);
             dataBase.roomobject.rooms = rooms.ToArray();
         }
-        public static void RemoveRoomObject(DataBase dataBase, int id)//принцип такой же как удаление пользователя по айди
+        public static void RemoveRoomObject(DataBase dataBase, string id)//принцип такой же как удаление пользователя по айди
         {
             for (int i = 0; i < dataBase.roomobject.rooms.Length; i++)
             {
@@ -205,9 +207,9 @@ namespace DataBase.BD
             string roomData = JsonSerializer.Serialize<Roomobject>(_roomobject, options);
             return roomData;
         }
-        public static string GetCurrentUserString(User _user)//функция сериализует конкретного пользователя, десериализовав которого, можно создать класс User в клиенте или сервере
+        public static string GetCurrentUserString(DataBase dataBase, string id)//функция сериализует конкретного пользователя, десериализовав которого, можно создать класс User в клиенте или сервере
         {
-            if (_user == null)
+            if (dataBase == null)
             {
 
             }
@@ -216,12 +218,12 @@ namespace DataBase.BD
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
                 WriteIndented = true
             };
-            string userData = JsonSerializer.Serialize<User>(_user, options);
+            string userData = JsonSerializer.Serialize<User>(FindUser(dataBase, id), options);
             return userData;
         }
-        public static string GetCurrentRoomString(Room _room)//функция сериализует конкретного комнату, десериализовав которую, можно создать класс Room в клиенте или сервере
+        public static string GetCurrentRoomString(DataBase dataBase, string roomid)//функция сериализует конкретного комнату, десериализовав которую, можно создать класс Room в клиенте или сервере
         {
-            if (_room == null)
+            if (dataBase == null)
             {
 
             }
@@ -230,7 +232,8 @@ namespace DataBase.BD
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
                 WriteIndented = true
             };
-            string roomData = JsonSerializer.Serialize<Room>(_room, options);
+
+            string roomData = JsonSerializer.Serialize<Room>(FindRoom(dataBase, roomid), options);
             return roomData;
         }
         public static void SaveBD(DataBase dataBase)//функция сохраняет базу данных - записывает в файл
@@ -247,6 +250,71 @@ namespace DataBase.BD
         public static Room InitRoom(string roomData)//функция возвращает класс комнаты. на вход принимает результат функции GetCurrentRoomString
         {
             return JsonSerializer.Deserialize<Room>(roomData);
+        }
+        public static void AddDate(DataBase dataBase, string roomid, string comeDate, string outDate)
+        {
+            for (int i = 0; i < dataBase.roomobject.rooms.Length; i++)
+            {
+                if (dataBase.roomobject.rooms[i].id == roomid)
+                {
+                    List<string> spisokdat = dataBase.roomobject.rooms[i].dates.ToList();
+                    spisokdat.Add(comeDate);
+                    spisokdat.Add(outDate);
+                    dataBase.roomobject.rooms[i].dates = spisokdat.ToArray();
+                    return;
+                }
+            }
+
+        }
+        public static Room FindRoom(DataBase dataBase, string roomId) //возвращает комнату по ее id
+        {
+            for (int i = 0; i < dataBase.roomobject.rooms.Length; i++)
+            {
+                if (dataBase.roomobject.rooms[i].id == roomId)
+                {
+                    return dataBase.roomobject.rooms[i];
+                }
+            }
+            return null;
+        }
+        public static User FindUser(DataBase dataBase, string bookingId) //возвращает юзера по id
+        {
+            for (int i = 0; i < dataBase.userobject.users.Length; i++)
+            {
+                if (dataBase.userobject.users[i].id == bookingId)
+                {
+                    return dataBase.userobject.users[i];
+                }
+            }
+            return null;
+        }
+        public static string GetUserString(User _user)//функция сериализует конкретного пользователя, десериализовав которого, можно создать класс User в клиенте или сервере
+        {
+            if (_user == null)
+            {
+
+            }
+            JsonSerializerOptions options = new JsonSerializerOptions//настройки для того чтобы русский текст не превратился в юникод по типу /u4040/
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            string userData = JsonSerializer.Serialize<User>(_user, options);
+            return userData;
+        }
+        public static string GetRoomString(Room _room)//функция сериализует конкретного комнату, десериализовав которую, можно создать класс Room в клиенте или сервере
+        {
+            if (_room == null)
+            {
+
+            }
+            JsonSerializerOptions options = new JsonSerializerOptions//настройки для того чтобы русский текст не превратился в юникод по типу /u4040/
+            {
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
+                WriteIndented = true
+            };
+            string roomData = JsonSerializer.Serialize<Room>(_room, options);
+            return roomData;
         }
     }
 }
