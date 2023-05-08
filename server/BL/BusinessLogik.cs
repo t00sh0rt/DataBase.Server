@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.ComponentModel;
+using System.ComponentModel.Design;
 
 namespace server
 {
@@ -44,7 +46,7 @@ namespace server
 
         public static string GetRoom(string roomNumber, DataBase dataBase) //возвращает инфу про этот тип комнат по номеру комнаты
         {
-            var result= DataBase.GetCurrentRoomString(dataBase, roomNumber);
+            var result = DataBase.GetCurrentRoomString(dataBase, roomNumber);
             if (result == null)
             {
                 //warring
@@ -64,7 +66,7 @@ namespace server
         {
             string symbols = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             Random random = new Random((int)DateTime.Now.Ticks);
-            bool ok=true;
+            bool ok = true;
             while (true)
             {
                 random = new Random((int)DateTime.Now.Ticks);
@@ -85,8 +87,8 @@ namespace server
                     return bookingId;
                 }
             }
-            
-            
+
+
         }
         public static string UserIdCreation(DataBase dataBase)
         {
@@ -98,22 +100,35 @@ namespace server
             maxId += 1;
             return maxId.ToString();
         }
-        public static string CheckUserCreation(DataBase dataBase,User user)
+        public static string CheckUserCreation(DataBase dataBase, User user)
         {
             var result = "";
-            var e=false;
-            var l=false;
+            var e = false;
+            var l = false;
             var n = false;
             for (int i = 0; i < dataBase.userobject.users.Length; i++)
             {
-                if (user.email== dataBase.userobject.users[i].email) { e=true; }
-                if (user.login == dataBase.userobject.users[i].login) { l=true; }
-                if (user.number == dataBase.userobject.users[i].number) { n=true; }
+                if (user.email == dataBase.userobject.users[i].email) { e = true; }
+                if (user.login == dataBase.userobject.users[i].login) { l = true; }
+                if (user.number == dataBase.userobject.users[i].number) { n = true; }
             }
             if (e) { result += "e"; }
             if (l) { result += "l"; }
             if (n) { result += "n"; }
             return result;
+        }
+
+        public static string CheckLogin(DataBase dataBase, string nameLoginNumber, string password)
+        {
+            for (int i = 0; i < dataBase.userobject.users.Length; i++)
+            {
+                var user = dataBase.userobject.users[i];
+                if (user.login == nameLoginNumber || user.email == nameLoginNumber || user.number == nameLoginNumber)
+                {
+                    if (user.password == password) return user.id;
+                }
+            }
+            return "wrong";
         }
     }
 }

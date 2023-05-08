@@ -44,9 +44,11 @@ namespace server
                     }
                     while (listener.Available > 0);
                     var message = data.ToString();
+                    Console.WriteLine("Принял сообщение:\n");
                     Console.WriteLine(message);
                     
                     string client = DataBase.GetUserObjectString(dataBase.userobject);
+                    dataBase = DataBase.InitBD(path);
                     if (choice == 1)//отправить информацию про комнату по айди
                     {
                         string roomx = DataBase.GetCurrentRoomString(dataBase,message);
@@ -76,17 +78,26 @@ namespace server
                         var check = BusinessLogik.CheckUserCreation(dataBase, user);
                         if (check.Contains('e') || check.Contains('l') || check.Contains('n'))
                         {
+                            Console.WriteLine($"Ошибка:\n{check}\ne-аккаунт с данным email уже существует\nl-аккаунт с данным логином уже существует\nn-аккаунт с данным номером уже существует");
                             listener.Send(Encoding.UTF8.GetBytes(check));
                         }
                         else
                         {
+                            Console.WriteLine("Создан аккаунт:\n");
                             user.id = BusinessLogik.UserIdCreation(dataBase);
                             Console.WriteLine(DataBase.GetUserString(user));
                             DataBase.AddUser(dataBase, user);
-                            //dataBase.SaveBD();
+                            dataBase.SaveBD();
+                            
 
                         }
 
+                    }
+                    if (choice == 6)//вход в аккаунт
+                    {
+                        var res = BusinessLogik.CheckLogin(dataBase, message.Split("'")[0], message.Split("'")[1]);
+                        Console.WriteLine($" отправил {res}");
+                        listener.Send(Encoding.UTF8.GetBytes(res));
                     }
                     
                     
