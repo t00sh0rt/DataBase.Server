@@ -11,7 +11,7 @@ namespace server
 {
     internal class BusinessLogik
     {
-        public static bool TryReceive(Socket listener, byte[] urByte)
+        public static bool TryReceive(Socket listener, byte[] urByte)//функция проеряет есть ли доступ к удаленному сокету
         {
             try
             {
@@ -32,30 +32,88 @@ namespace server
             }
             return true;
         }
-        public static string FindUserToSend(string bookingId, DataBase dataBase) //возвращает юзера по id
+        public static string GetUser(string bookingId, DataBase dataBase) //возвращает юзера по id
         {
-            for (int i = 0; i < dataBase.userobject.users.Length; i++)
+            var result = DataBase.GetCurrentUserString(dataBase, bookingId);
+            if (result == null)
             {
-                if (dataBase.userobject.users[i].id == bookingId)
-                {
-                    string user = DataBase.GetCurrentUserString(dataBase,bookingId);
-                    return (user);
-                }
+                //warring
             }
-            return null;
+            return result;
         }
 
-        public static string GetRoom(string roomId, DataBase dataBase) //возвращает комнату по ее id
+        public static string GetRoom(string roomNumber, DataBase dataBase) //возвращает инфу про этот тип комнат по номеру комнаты
         {
-            for (int i = 0; i < dataBase.roomobject.rooms.Length; i++)
+            var result= DataBase.GetCurrentRoomString(dataBase, roomNumber);
+            if (result == null)
             {
-                if (dataBase.roomobject.rooms[i].id == roomId)
+                //warring
+            }
+            return result;
+        }
+        public static string GetBooking(string bookingId, DataBase dataBase) //возвращает бронь по ее id
+        {
+            var result = DataBase.GetCurrentBookingString(dataBase, bookingId);
+            if (result == null)
+            {
+                //warring
+            }
+            return result;
+        }
+        public static string BookingNumberRandom(DataBase dataBase)
+        {
+            string symbols = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random random = new Random((int)DateTime.Now.Ticks);
+            bool ok=true;
+            while (true)
+            {
+                random = new Random((int)DateTime.Now.Ticks);
+                string bookingId = "";
+                for (int i = 0; i < 4; i++)
                 {
-                    string roomx = DataBase.GetCurrentRoomString(dataBase, roomId);
-                    return (roomx);
+                    bookingId += (symbols[random.Next(symbols.Length)]);
+                }
+                for (int i = 0; i < dataBase.bookingobject.bookings.Length; i++)
+                {
+                    if (dataBase.bookingobject.bookings[i].id == bookingId)
+                    {
+                        ok = false;
+                    }
+                }
+                if (ok)
+                {
+                    return bookingId;
                 }
             }
-            return null;
+            
+            
+        }
+        public static string UserIdCreation(DataBase dataBase)
+        {
+            var maxId = 0;
+            for (int i = 0; i < dataBase.userobject.users.Length; i++)
+            {
+                if (Convert.ToInt32(dataBase.userobject.users[i].id) >= maxId) { maxId = Convert.ToInt32(dataBase.userobject.users[i].id); }
+            }
+            maxId += 1;
+            return maxId.ToString();
+        }
+        public static string CheckUserCreation(DataBase dataBase,User user)
+        {
+            var result = "";
+            var e=false;
+            var l=false;
+            var n = false;
+            for (int i = 0; i < dataBase.userobject.users.Length; i++)
+            {
+                if (user.email== dataBase.userobject.users[i].email) { e=true; }
+                if (user.login == dataBase.userobject.users[i].login) { l=true; }
+                if (user.number == dataBase.userobject.users[i].number) { n=true; }
+            }
+            if (e) { result += "e"; }
+            if (l) { result += "l"; }
+            if (n) { result += "n"; }
+            return result;
         }
     }
 }
