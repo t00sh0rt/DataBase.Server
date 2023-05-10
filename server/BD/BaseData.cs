@@ -313,7 +313,7 @@ namespace server
         }
         public static Room FindRoom(DataBase dataBase, string roomNumber) //возвращает инфу про тип комнат по номеру комнаты
         {
-            var ch = Convert.ToInt32(roomNumber);
+            var ch = Convert.ToInt32(roomNumber)-1;
             var del = dataBase.roomobject.rooms.Length;
             if (dataBase.roomobject.rooms.Length >= (ch % del))
             {
@@ -400,6 +400,16 @@ namespace server
             };
             string bookingData = JsonSerializer.Serialize<Booking>(_booking, options);
             return bookingData;
+        }
+        public static Bookingobject InitBookings(string BookingsData)
+        {
+
+            return JsonSerializer.Deserialize<Bookingobject>(BookingsData);
+        }
+        public static string GetRoomType(string roomType,DataBase dataBase)
+        {
+            var roomTypeint=Convert.ToInt32(roomType)-1;
+            return GetRoomString(dataBase.roomobject.rooms[roomTypeint]);
         }
     }
 }
