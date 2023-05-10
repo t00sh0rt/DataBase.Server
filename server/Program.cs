@@ -16,16 +16,14 @@ namespace server
             string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetFullPath("Rooms1.json"))))) + "\\BD\\";// BD init
             DataBase dataBase = DataBase.InitBD(path);// BD init
             int choice;
-            const string ip = "127.0.0.1"; //Ip локальный  
             const int port = 8080; //Port любой
             var tcpEndPoint = new IPEndPoint(IPAddress.Any, port); // класс конечной точки (точка подключения), принимает Ip and Port
             var tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // сокет объявляем, через него все проходит + прописываем дефолтные характеристики для TCP
             tcpSocket.Bind(tcpEndPoint); // Связываем сокет с конечной точкой (кого нужно слушать)
             tcpSocket.Listen(100); // кол-во челов, которые могут подключиться
-
-            
             while (true)
             {
+                dataBase = DataBase.InitBD(path);//подгружаем данные
                 // обработчик на прием сообщения 
                 var listener = tcpSocket.Accept(); //новый сокет, который обрабатывает клиента
                 var buffer = new byte[256]; // массив байтов, куда будут приниматься сообщения
@@ -35,7 +33,6 @@ namespace server
                 {
                     
                     choice = BitConverter.ToInt32(ChoiceByte, 0);
-                    Console.WriteLine(choice);
                     do
                     {
 
@@ -44,33 +41,41 @@ namespace server
                     }
                     while (listener.Available > 0);
                     var message = data.ToString();
-                    Console.WriteLine("Принял сообщение:\n");
+                    Console.WriteLine("Принял сообщение:");
                     Console.WriteLine(message);
+
                     
                     string client = DataBase.GetUserObjectString(dataBase.userobject);
-                    dataBase = DataBase.InitBD(path);
-                    if (choice == 1)//отправить информацию про комнату по айди
+                    if (choice == 1)//отправить информацию про комнату по номеру комнаты
                     {
                         string roomx = DataBase.GetCurrentRoomString(dataBase,message);
-                        Console.WriteLine(roomx);
+                        Console.WriteLine($"Отправил{roomx}");
                         listener.Send(Encoding.UTF8.GetBytes(roomx)); //передаем какое-либо сообщение
                     }
                     if (choice == 2)//отправить информацию про бронь по айди
                     {
-                        listener.Send(Encoding.UTF8.GetBytes(DataBase.GetCurrentBookingString(dataBase, message)));
+                        var res = DataBase.GetCurrentBookingString(dataBase, message);
+                        Console.WriteLine($"Отправил{res}");
+                        listener.Send(Encoding.UTF8.GetBytes(res));
                     }
                     if (choice == 3)//отправить информацию про пользователя по айди
                     {
 
                     }
-                    if (choice == 4)//создать бронь и отправить её номер
+                    if (choice == 4)//создать бронь и отправить её инфу
                     {
-                        var bookingId=BusinessLogik.BookingNumberRandom(dataBase);
-                        Console.WriteLine(bookingId);
-                        var booking = DataBase.InitBooking(message);
-                        booking.id = bookingId.ToString();
-                        DataBase.AddBooking(dataBase, booking);
-                        listener.Send(Encoding.UTF8.GetBytes(bookingId));
+                        var result = BusinessLogik.Book(dataBase, message.Split("'")[1], message.Split("'")[2], message.Split("'")[3], message.Split("'")[0]);
+                        if (!(result.Contains("wrongCount")||result.Contains("wrongDate")||result==null))
+                        {
+                            var booking =DataBase.InitBooking(result);
+                            DataBase.AddBooking(dataBase, booking);
+                            dataBase.SaveBD();
+                            dataBase = DataBase.InitBD(path);
+                        }
+                        Console.WriteLine("Oтправил: "+result);
+                        listener.Send(Encoding.UTF8.GetBytes(result));
+                        
+
                     }
                     if (choice == 5)//создать пользователя и отправить код ошибки если возникла ошибка
                     {
@@ -88,7 +93,8 @@ namespace server
                             Console.WriteLine(DataBase.GetUserString(user));
                             DataBase.AddUser(dataBase, user);
                             dataBase.SaveBD();
-                            
+                            dataBase = DataBase.InitBD(path);
+
 
                         }
 
@@ -99,13 +105,24 @@ namespace server
                         Console.WriteLine($" отправил {res}");
                         listener.Send(Encoding.UTF8.GetBytes(res));
                     }
-                    
-                    
-
-                    
+                    if (choice == 7)//отправить инфу про бронь по айди пользователя
+                    {
+                        var res = BusinessLogik.GetBookings(dataBase,message);
+                        listener.Send(Encoding.UTF8.GetBytes(res));
+                        Console.WriteLine($" отправил {res}");
+                    }
+                    if (choice == 8)//удалить бронь по её номеру
+                    {
+                        var res = BusinessLogik.DeleteBooking(dataBase,message);
+                        listener.Send(Encoding.UTF8.GetBytes(res));
+                        dataBase.SaveBD();
+                        dataBase = DataBase.InitBD(path);
+                        Console.WriteLine($" отправил {res}");
+                        Console.WriteLine($"ok-удалили, wrong-ошибка такой брони нет");
+                    }
+                    listener.Shutdown(SocketShutdown.Both); // отключаем и у клиента, и у сервера
+                    listener.Close(); // закрываем
                 }
-                listener.Shutdown(SocketShutdown.Both); // отключаем и у клиента, и у сервера
-                listener.Close(); // закрываем
             }
         }
     }

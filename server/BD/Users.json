@@ -17,6 +17,15 @@
       "number": "89249752641",
       "email": "petruha@mail.ru",
       "bookingCount": 1
+    },
+    {
+      "id": "3",
+      "name": "test",
+      "login": "Test",
+      "password": "testtest",
+      "number": "89614319485",
+      "email": "akrabat@mail.ru",
+      "bookingCount": 0
     }
   ]
 }
